@@ -1,3 +1,4 @@
 <div>
-    {{-- Care about people's approval and you will be their prisoner. --}}
+    This is a full page livewire component
+    The current slug {{ $urlslug  }}
 </div>

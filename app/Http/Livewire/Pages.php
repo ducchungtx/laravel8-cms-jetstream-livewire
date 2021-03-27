@@ -6,10 +6,13 @@ use App\Models\Page;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class Pages extends Component
 {
+    use WithPagination;
     public $modalFormVisiable = false;
+    public $modalConfirmDeleteVisible = false;
     public $modelId;
     public $slug;
     public $title;
@@ -22,9 +25,18 @@ class Pages extends Component
     public function rules() {
         return [
             'title' => 'required',
-            'slug' => ['required', Rule::unique('pages', 'slug')],
+            'slug' => ['required', Rule::unique('pages', 'slug')->ignore($this->modelId)],
             'content' => 'required'
         ];
+    }
+
+    /**
+     * The livewire mount function
+     */
+    public function mount() {
+        // Reset the pagination after reload the page
+        $this->resetPage();
+
     }
 
     /**
@@ -53,10 +65,24 @@ class Pages extends Component
         return Page::paginate(5);
     }
 
+    public function update() {
+        $this->validate();
+        Page::find($this->modelId)->update($this->modelData());
+        $this->modalFormVisiable = false;
+    }
+
+    public function delete() {
+        Page::destroy($this->modelId);
+        $this->modalConfirmDeleteVisible = false;
+        $this->resetPage();
+    }
+
     /**
      * Show the form modal of the create function.
      */
     public function createShowModal() {
+        $this->resetValidation();
+        $this->resetVars();
         $this->modalFormVisiable = true;
     }
 
@@ -65,9 +91,20 @@ class Pages extends Component
      * @param $id
      */
     public function updateShowModal($id) {
+        $this->resetValidation();
+        $this->resetVars();
         $this->modelId = $id;
         $this->modalFormVisiable = true;
         $this->loadModel();
+    }
+
+    /**
+     * Shows the delete confirmation modal of the delete function
+     * @param $id
+     */
+    public function deleteShowModal($id) {
+        $this->modelId = $id;
+        $this->modalConfirmDeleteVisible = true;
     }
 
     /**
@@ -96,6 +133,7 @@ class Pages extends Component
      * Reset all the variables to null.
      */
     public function resetVars() {
+        $this->modelId = null;
         $this->title = null;
         $this->slug = null;
         $this->content = null;
