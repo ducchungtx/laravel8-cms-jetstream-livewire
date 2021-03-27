@@ -1,4 +1,4 @@
 <div>
-    This is a full page livewire component
-    The current slug {{ $urlslug  }}
+    <h1>{{ $title }}</h1>
+    {!! $content !!}
 </div>

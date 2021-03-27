@@ -18,7 +18,6 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/dnoegel/php-xdg-base-dir" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/phpoption/phpoption" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/webmozart/assert" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-mbstring" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/fakerphp/faker" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/guzzlehttp/promises" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/finder" />
@@ -127,6 +126,7 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/laravel/sanctum" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/livewire/livewire" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/te7a-houdini/laravel-trix" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-mbstring" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
