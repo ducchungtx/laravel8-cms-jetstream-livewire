@@ -17,6 +17,8 @@ class Pages extends Component
     public $slug;
     public $title;
     public $content;
+    public $isSetToDefaultHomePage;
+    public $isSetToDefaultNotFoundPage;
 
     /**
      * The validation rules
@@ -48,6 +50,29 @@ class Pages extends Component
     }
 
     /**
+     * Runs everytime the isSetToDefaultHomePage
+     * variable is updated.
+     *
+     * @return void
+     */
+    public function updatedIsSetToDefaultHomePage()
+    {
+        $this->isSetToDefaultNotFoundPage = null;
+    }
+
+    /**
+     * Runs everytime the isSetToDefaultNotFoundPage
+     * variable is updated.
+     *
+     * @return void
+     */
+    public function updatedIsSetToDefaultNotFoundPage()
+    {
+        $this->isSetToDefaultHomePage = null;
+    }
+
+
+    /**
      * The create function
      */
     public function create() {
@@ -67,6 +92,8 @@ class Pages extends Component
 
     public function update() {
         $this->validate();
+        $this->unassignDefaultHomePage();
+        $this->unassignDefaultNotFoundPage();
         Page::find($this->modelId)->update($this->modelData());
         $this->modalFormVisiable = false;
     }
@@ -115,6 +142,8 @@ class Pages extends Component
         $this->title = $data->title;
         $this->slug = $data->slug;
         $this->content = $data->content;
+        $this->isSetToDefaultHomePage = !$data->is_default_home ? null : true;
+        $this->isSetToDefaultNotFoundPage = !$data->is_default_not_found ? null : true;
     }
 
     /**
@@ -125,8 +154,38 @@ class Pages extends Component
         return [
             'title' => $this->title,
             'slug' => $this->slug,
-            'content' => $this->content
+            'content' => $this->content,
+            'is_default_home' => $this->isSetToDefaultHomePage,
+            'is_default_not_found' => $this->isSetToDefaultNotFoundPage,
         ];
+    }
+
+    /**
+     * Unassigns the default home page in the database table
+     *
+     * @return void
+     */
+    private function unassignDefaultHomePage()
+    {
+        if ($this->isSetToDefaultHomePage != null) {
+            Page::where('is_default_home', true)->update([
+                'is_default_home' => false,
+            ]);
+        }
+    }
+
+    /**
+     * Unassigns the default 404 page in the database table
+     *
+     * @return void
+     */
+    private function unassignDefaultNotFoundPage()
+    {
+        if ($this->isSetToDefaultNotFoundPage != null) {
+            Page::where('is_default_not_found', true)->update([
+                'is_default_not_found' => false,
+            ]);
+        }
     }
 
     /**
@@ -137,6 +196,8 @@ class Pages extends Component
         $this->title = null;
         $this->slug = null;
         $this->content = null;
+        $this->isSetToDefaultHomePage = null;
+        $this->isSetToDefaultNotFoundPage = null;
     }
 
     /**
