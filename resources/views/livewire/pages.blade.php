@@ -10,6 +10,7 @@
         <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
                 <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead>
                         <tr>
@@ -20,52 +21,56 @@
                         </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
-                            @if ($data->count())
-                                @foreach ($data as $item)
-                                    <tr>
-                                        <td class="px-6 py-4 text-sm whitespace-no-wrap">
-                                            {{ $item->title }}
-                                            {!! $item->is_default_home ? '<span class="text-green-400 text-xs font-bold">[Default Home Page]</span>':''!!}
-                                            {!! $item->is_default_not_found ? '<span class="text-red-400 text-xs font-bold">[Default 404 Page]</span>':''!!}
-                                        </td>
-                                        <td class="px-6 py-4 text-sm whitespace-no-wrap">
-                                            <a
-                                                class="text-indigo-600 hover:text-indigo-900"
-                                                target="_blank"
-                                                href="{{ URL::to('/'.$item->slug)}}"
-                                            >
-                                                {{ $item->slug }}
-                                            </a>
-                                        </td>
-                                        <td class="px-6 py-4 text-sm whitespace-no-wrap">{!! $item->content !!}</td>
-                                        <td class="px-6 py-4 text-right text-sm">
-                                            <x-jet-button wire:click="updateShowModal({{ $item->id }})">
-                                                {{ __('Update') }}
-                                            </x-jet-button>
-                                            <x-jet-danger-button wire:click="deleteShowModal({{ $item->id }})">
-                                                {{ __('Delete') }}
-                                            </x-jet-danger-button>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            @else
+                        @if ($data->count())
+                            @foreach ($data as $item)
                                 <tr>
-                                    <td class="px-6 py-4 text-sm whitespace-no-wrap" colspan="4">No Results Found</td>
+                                    <td class="px-6 py-4 text-sm whitespace-no-wrap">
+                                        {{ $item->title }}
+                                        {!! $item->is_default_home ? '<span class="text-green-400 text-xs font-bold">[Default Home Page]</span>':''!!}
+                                        {!! $item->is_default_not_found ? '<span class="text-red-400 text-xs font-bold">[Default 404 Page]</span>':''!!}
+                                    </td>
+                                    <td class="px-6 py-4 text-sm whitespace-no-wrap">
+                                        <a
+                                            class="text-indigo-600 hover:text-indigo-900"
+                                            target="_blank"
+                                            href="{{ URL::to('/'.$item->slug)}}"
+                                        >
+                                            {{ $item->slug }}
+                                        </a>
+                                    </td>
+                                    <td class="px-6 py-4 text-sm whitespace-no-wrap">{!! $item-> content !!}</td>
+                                    <td class="px-6 py-4 text-right text-sm">
+                                        <x-jet-button wire:click="updateShowModal({{ $item->id }})">
+                                            {{ __('Update') }}
+                                        </x-jet-button>
+                                        <x-jet-danger-button wire:click="deleteShowModal({{ $item->id }})">
+                                            {{ __('Delete') }}
+                                            </x-jet-button>
+                                    </td>
                                 </tr>
-                            @endif
+                            @endforeach
+                        @else
+                            <tr>
+                                <td class="px-6 py-4 text-sm whitespace-no-wrap" colspan="4">No Results Found</td>
+                            </tr>
+                        @endif
+
                         </tbody>
                     </table>
+
+
                 </div>
             </div>
         </div>
     </div>
-    <br>
+
+    <br/>
     {{ $data->links() }}
 
-    {{-- Modal Form--}}
-    <x-jet-dialog-modal wire:model="modalFormVisiable">
+    {{-- Modal Form --}}
+    <x-jet-dialog-modal wire:model="modalFormVisible">
         <x-slot name="title">
-            {{ __('Save Page') }} {{ $modelId }}
+            {{ __('Save Page') }}
         </x-slot>
 
         <x-slot name="content">
@@ -115,23 +120,25 @@
         </x-slot>
 
         <x-slot name="footer">
-            <x-jet-secondary-button wire:click="$toggle('modalFormVisiable')" wire:loading.attr="disabled">
-                {{ __('Cancel') }}
+            <x-jet-secondary-button wire:click="$toggle('modalFormVisible')" wire:loading.attr="disabled">
+                {{ __('Nevermind') }}
             </x-jet-secondary-button>
 
             @if ($modelId)
-                <x-jet-danger-button class="ml-2" wire:click="update" wire:loading.attr="disabled">
+                <x-jet-button class="ml-2" wire:click="update" wire:loading.attr="disabled">
                     {{ __('Update') }}
-                </x-jet-danger-button>
-            @else
-                <x-jet-danger-button class="ml-2" wire:click="create" wire:loading.attr="disabled">
-                    {{ __('Create') }}
-                </x-jet-danger-button>
+                    </x-jet-danger-button>
+                    @else
+                        <x-jet-button class="ml-2" wire:click="create" wire:loading.attr="disabled">
+                            {{ __('Create') }}
+                            </x-jet-danger-button>
             @endif
+
         </x-slot>
     </x-jet-dialog-modal>
 
     {{-- The Delete Modal --}}
+
     <x-jet-dialog-modal wire:model="modalConfirmDeleteVisible">
         <x-slot name="title">
             {{ __('Delete Page') }}

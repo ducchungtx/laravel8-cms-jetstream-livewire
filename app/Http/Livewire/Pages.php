@@ -11,7 +11,8 @@ use Livewire\WithPagination;
 class Pages extends Component
 {
     use WithPagination;
-    public $modalFormVisiable = false;
+
+    public $modalFormVisible = false;
     public $modalConfirmDeleteVisible = false;
     public $modelId;
     public $slug;
@@ -22,30 +23,89 @@ class Pages extends Component
 
     /**
      * The validation rules
+     *
      * @return array
      */
-    public function rules() {
+    public function rules()
+    {
         return [
             'title' => 'required',
             'slug' => ['required', Rule::unique('pages', 'slug')->ignore($this->modelId)],
-            'content' => 'required'
+            'content' => 'required',
         ];
     }
 
     /**
      * The livewire mount function
+     *
+     * @return void
      */
-    public function mount() {
-        // Reset the pagination after reload the page
+    public function mount()
+    {
+        // Resets the pagination after reloading the page
         $this->resetPage();
-
     }
 
     /**
-     * Runs everytime the title variable is updated
-     * @param $value
+     * The create function.
+     *
+     * @return void
      */
-    public function updatedTitle($value) {
+    public function create()
+    {
+        $this->validate();
+        $this->unassignDefaultHomePage();
+        $this->unassignDefaultNotFoundPage();
+        Page::create($this->modelData());
+        $this->modalFormVisible = false;
+        $this->reset();
+    }
+
+    /**
+     * The read function.
+     *
+     * @return void
+     */
+    public function read()
+    {
+        return Page::paginate(5);
+    }
+
+    /**
+     * The update function.
+     *
+     * @return void
+     */
+    public function update()
+    {
+        $this->validate();
+        $this->unassignDefaultHomePage();
+        $this->unassignDefaultNotFoundPage();
+        Page::find($this->modelId)->update($this->modelData());
+        $this->modalFormVisible = false;
+    }
+
+    /**
+     * The delete function.
+     *
+     * @return void
+     */
+    public function delete()
+    {
+        Page::destroy($this->modelId);
+        $this->modalConfirmDeleteVisible = false;
+        $this->resetPage();
+    }
+
+    /**
+     * Runs everytime the title
+     * variable is updated.
+     *
+     * @param mixed $value
+     * @return void
+     */
+    public function updatedTitle($value)
+    {
         $this->slug = Str::slug($value);
     }
 
@@ -71,73 +131,55 @@ class Pages extends Component
         $this->isSetToDefaultHomePage = null;
     }
 
-
     /**
-     * The create function
+     * Shows the form modal
+     * of the create function.
+     *
+     * @return void
      */
-    public function create() {
-        $this->validate();
-        Page::create($this->modelData());
-        $this->modalFormVisiable = false;
-        $this->resetVars();
-    }
-
-    /**
-     * The read function.
-     * @return mixed
-     */
-    public function read() {
-        return Page::paginate(5);
-    }
-
-    public function update() {
-        $this->validate();
-        $this->unassignDefaultHomePage();
-        $this->unassignDefaultNotFoundPage();
-        Page::find($this->modelId)->update($this->modelData());
-        $this->modalFormVisiable = false;
-    }
-
-    public function delete() {
-        Page::destroy($this->modelId);
-        $this->modalConfirmDeleteVisible = false;
-        $this->resetPage();
-    }
-
-    /**
-     * Show the form modal of the create function.
-     */
-    public function createShowModal() {
+    public function createShowModal()
+    {
         $this->resetValidation();
-        $this->resetVars();
-        $this->modalFormVisiable = true;
+        $this->reset();
+        $this->modalFormVisible = true;
     }
 
     /**
-     * Show the form modal in update model.
-     * @param $id
+     * Shows the form modal
+     * in update mode.
+     *
+     * @param mixed $id
+     * @return void
      */
-    public function updateShowModal($id) {
+    public function updateShowModal($id)
+    {
         $this->resetValidation();
-        $this->resetVars();
+        $this->reset();
         $this->modelId = $id;
-        $this->modalFormVisiable = true;
+        $this->modalFormVisible = true;
         $this->loadModel();
     }
 
     /**
-     * Shows the delete confirmation modal of the delete function
-     * @param $id
+     * Shows the delete confirmation modal.
+     *
+     * @param mixed $id
+     * @return void
      */
-    public function deleteShowModal($id) {
+    public function deleteShowModal($id)
+    {
         $this->modelId = $id;
         $this->modalConfirmDeleteVisible = true;
     }
 
     /**
-     * Load the model data of this component
+     * Loads the model data
+     * of this component.
+     *
+     * @return void
      */
-    public function loadModel() {
+    public function loadModel()
+    {
         $data = Page::find($this->modelId);
         $this->title = $data->title;
         $this->slug = $data->slug;
@@ -147,10 +189,13 @@ class Pages extends Component
     }
 
     /**
-     * The data for the model mapped in this component
+     * The data for the model mapped
+     * in this component.
+     *
      * @return array
      */
-    public function modelData() {
+    public function modelData()
+    {
         return [
             'title' => $this->title,
             'slug' => $this->slug,
@@ -189,25 +234,14 @@ class Pages extends Component
     }
 
     /**
-     * Reset all the variables to null.
-     */
-    public function resetVars() {
-        $this->modelId = null;
-        $this->title = null;
-        $this->slug = null;
-        $this->content = null;
-        $this->isSetToDefaultHomePage = null;
-        $this->isSetToDefaultNotFoundPage = null;
-    }
-
-    /**
-     * The livewire render funtion.
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * The livewire render function.
+     *
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|void
      */
     public function render()
     {
         return view('livewire.pages', [
-            'data' => $this->read()
+            'data' => $this->read(),
         ]);
     }
 }
