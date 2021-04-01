@@ -1,5 +1,8 @@
 <div class="p-6">
     <div class="flex items-center justify-end px-4 py-3 text-right sm:px-6">
+        <x-jet-button class="mr-5" wire:click="dispatchEvent">
+            {{ __('Dispatch Event') }}
+        </x-jet-button>
         <x-jet-button wire:click="createShowModal">
             {{ __('Create') }}
         </x-jet-button>
@@ -38,7 +41,7 @@
                                             {{ $item->slug }}
                                         </a>
                                     </td>
-                                    <td class="px-6 py-4 text-sm whitespace-no-wrap">{!! Str::limit($item->content, 50, '...') !!}</td>
+                                    <td class="px-6 py-4 text-sm whitespace-no-wrap">{!! \Illuminate\Support\Str::limit($item->content, 50, '...') !!}</td>
                                     <td class="px-6 py-4 text-right text-sm">
                                         <x-jet-button wire:click="updateShowModal({{ $item->id }})">
                                             {{ __('Update') }}
@@ -131,7 +134,6 @@
                     @else
                         <x-jet-button class="ml-2" wire:click="create" wire:loading.attr="disabled">
                             {{ __('Create') }}
-
                             </x-jet-danger-button>
             @endif
 
