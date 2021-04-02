@@ -60,8 +60,6 @@
 
                         </tbody>
                     </table>
-
-
                 </div>
             </div>
         </div>
@@ -83,7 +81,7 @@
                 @error('title') <span class="error">{{ $message }}</span> @enderror
             </div>
             <div class="mt-4">
-                <x-jet-label for="title" value="{{ __('Slug') }}" />
+                <x-jet-label for="slug" value="{{ __('Slug') }}" />
                 <div class="mt-1 flex rounded-md shadow-sm">
                     <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
                         http://localhost:8000/
