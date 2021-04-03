@@ -3,7 +3,6 @@
 namespace App\Http\Livewire;
 
 use App\Models\NavigationMenu;
-use Illuminate\Validation\Rule;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -12,6 +11,7 @@ class NavigationMenus extends Component
     use WithPagination;
     public $modalFormVisible;
     public $modalConfirmDeleteVisible;
+
     public $modelId;
     public $label;
     public $sequence = 1;
@@ -101,6 +101,7 @@ class NavigationMenus extends Component
 
     /**
      * Load the model data of this component
+     * @return void
      */
     public function loadModel() {
         $data = NavigationMenu::find($this->modelId);
@@ -110,6 +111,10 @@ class NavigationMenus extends Component
         $this->sequence = $data->sequence;
     }
 
+    /**
+     * The data for the model mapped in this component
+     * @return array
+     */
     public function modelData() {
         return [
             'label' => $this->label,
